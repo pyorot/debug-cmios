@@ -11,7 +11,7 @@
 #include "tools.h"
 #include "http.h"
 #include "patchmios.h"
-#include "../build/cert_sys.h"
+#include "cert_sys.h"
 
 #define round_up(x,n)	(-(-(x) & -(n)))
 #define TITLE_UPPER(x)		( (u32)((x) >> 32) )

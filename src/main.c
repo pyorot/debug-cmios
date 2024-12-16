@@ -4,6 +4,7 @@
 #include <gccore.h>
 #include <malloc.h>
 
+#include "rtip.h"
 #include "IOSPatcher.h"
 #include "wad.h"
 #include "tools.h"
@@ -325,16 +326,7 @@ int main(int argc, char* argv[])
 
 	printheadline();
 	
-	ret = ios_selectionmenu(36);
-	if (ret != 0)
-	{
-		WPAD_Shutdown();
-		IOS_ReloadIOS(ret);
-		PAD_Init();
-		WPAD_Init();
-		WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);					
-	}
-
+	IosPatch_RUNTIME(PATCH_WII, PATCH_ISFS_PERMISSIONS | PATCH_ES_IDENTIFY | PATCH_HASH_CHECK | PATCH_NEW_HASH_CHECK, true);
 	printf("\n");
 	
 	printf("This application can brick your Wii, use it at your own risk!\n\n");

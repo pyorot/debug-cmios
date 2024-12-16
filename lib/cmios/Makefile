@@ -1,30 +1,30 @@
 # see the readme for instructions: https://github.com/systemwii/make
 
 # --- target ---
-TARGET		:=	boot
-TYPE		:=  dol
-PLATFORM	:=	wii
+TARGET		:=	dolloader
+TYPE		:=  bin
+PLATFORM	:=	gamecube
 BUILD		:=	_
 CACHE		:=	_/cache
 
 # --- sources ---
 SRCS		 =	src
 SRCEXTS		 =	.c
-BINS		 =	$(wildcard lib/*/_) data
-BINEXTS		 =	.bin .sys
-LIBS		 =	-lrtip -lfat -lwiiuse -lbte -lmad -lm -lmodplay -logc
-LIBDIRSBNDLE =	$(wildcard lib/*/_)
+BINS		 =	
+BINEXTS		 =	
+LIBS		 =	-logc
+LIBDIRSBNDLE =	
 LIBDIRSLOOSE =	
 INCLUDES	 =	
 
-# --- flags --- # do not include MACHDEP here !!! (see readme linked at top)
-CFLAGS		 =	-save-temps -g -O2 -Wall -Wno-unused-variable
+# --- flags ---
+CFLAGS		 =	-save-temps -g -Os -Wall -Wno-unused-variable
 CXXFLAGS	 =	$(CFLAGS)
 ASFLAGS		 =	-D_LANGUAGE_ASSEMBLY
-LDFLAGS		 =	-g -Wl,-Map,$(CACHE)/$(notdir $@).map
+LDFLAGS		 =	-g -Wl,--section-start,.init=0x81000000,-Map,$(CACHE)/$(notdir $@).map
 ARFLAGS		 =	rcs
 
 # --- runs the templates ---
 $(if $(findstring /,$(DEVKITPPC)),,$(error DEVKITPPC not set; run: export DEVKITPPC=<path to>devkitPPC))
-RULESDIR	:=	lib/make/rules
+RULESDIR	:=	../make/rules
 include $(RULESDIR)/main.mk
