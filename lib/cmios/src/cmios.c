@@ -1,15 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <malloc.h>
-#include <ogcsys.h>
-#include <gccore.h>
 #include <unistd.h>
+#include <gccore.h>
 
-#include "loader.h"
+extern int load_dol(void);
 
-void call_mios(void)
-{
+void call_mios(void) {
 	unsigned long *entry = (unsigned long *) 0x800037fc;
 
 	/* Restore patched entry point. */
@@ -29,12 +24,10 @@ void call_mios(void)
 	);
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	char *magic = (char *) 0x807FFFE0;
 
-	if (strncmp(magic, "gchomebrew dol", 32) != 0)
-	{
+	if (strncmp(magic, "gchomebrew dol", 32) != 0) {
 		/* No homebrew means normal startup. */
 		call_mios();
 	}
