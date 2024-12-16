@@ -708,9 +708,9 @@ out:
 s32 get_IOS(IOS **ios, u32 iosnr, u32 revision)
 {
 	char buf[64];
-	u32 pressed;
-	u32 pressedGC;
-	int selection = 0;
+	u32 pressed = 0;
+	u32 pressedGC = PAD_BUTTON_A;
+	int selection = 1;
 	int ret;
 	char *optionsstring[4] = { "<Load MIOS from sd card>", "<Load MIOS from usb storage>", "<Download MIOS from NUS>", "<Exit>" };
 	
@@ -722,7 +722,7 @@ s32 get_IOS(IOS **ios, u32 iosnr, u32 revision)
 		printf(optionsstring[selection]);
 		set_highlight(false);
 		
-		waitforbuttonpress(&pressed, &pressedGC);
+		//waitforbuttonpress(&pressed, &pressedGC);
 		
 		if (pressed == WPAD_BUTTON_LEFT || pressedGC == PAD_BUTTON_LEFT)
 		{
@@ -987,9 +987,9 @@ s32 Install_patched_MIOS(u32 iosnr, u32 iosrevision, bool patchhomebrew, u32 new
 	printf("Preparations complete\n\n");
 	printf("Press A to start the install...\n");
 
-	u32 pressed;
-	u32 pressedGC;	
-	waitforbuttonpress(&pressed, &pressedGC);
+	u32 pressed = 0;
+	u32 pressedGC = PAD_BUTTON_A;	
+	//waitforbuttonpress(&pressed, &pressedGC);
 	if (pressed != WPAD_BUTTON_A && pressedGC != PAD_BUTTON_A)
 	{
 		printf("Other button pressed\n");
