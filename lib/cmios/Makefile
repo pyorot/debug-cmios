@@ -10,8 +10,8 @@ CACHE		:=	_/cache
 # --- sources ---
 SRCS		 =	src ../monke/sha1 ../monke/console
 SRCEXTS		 =	.c
-BINS		 =	
-BINEXTS		 =	
+BINS		 =	data
+BINEXTS		 =	.dol
 LIBS		 =	-logc
 LIBDIRSBNDLE =	
 LIBDIRSLOOSE =	

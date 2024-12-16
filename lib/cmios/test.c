@@ -9,6 +9,8 @@
 #include "sha1.h"
 #include "console.h"
 
+#define INJECTED	// inject swiss.dol binary (placed in data folder) into cmios
+
 #define BC      0x0000000100000100ULL   // title ID of GameCube bootloader
 
 char* errStr = "";
@@ -62,18 +64,29 @@ int EXECGCDOL_LoadFile(FILE* fp) {
     DCFlushRange((char*)0x807FFFE0, 32);
     ICInvalidateRange((char*)0x807FFFE0, 32);*/
     return 0;
-};
+}
+
+void EXECGCDOL_Signal(u32 signal) {
+    *(u32*)0x80001800 = signal;
+    DCFlushRange((void*)0x80001800, 4);
+    ICInvalidateRange((void*)0x80001800, 4);    
+}
 
 int go() {
 	videoShow(true);
 	printf("== ExecGCDol ==\n\n");
 
+#ifdef INJECTED
+    EXECGCDOL_Signal(0x50155d01);
+#else
     if (!fatInitDefault()) { errStr = "(fatInitDefault)"; return fail(); }; 
     FILE* fp = fopen("usb:/apps/Swiss/swiss.dol", "rb");
     if (!fp) { errStr = strerror(errno); return fail(); };
     ret = EXECGCDOL_LoadFile(fp);
     fclose(fp);
     if (ret != 0) { errStr = "(EXECGCDOL_LoadFile)"; return fail(); };
+#endif
+
 	sleep(1);
 	while (padScanOnNextFrame()) { // while controller connected, stall if A held 
 		if ((~PAD_ButtonsHeld(0)) & PAD_BUTTON_A) { break; }

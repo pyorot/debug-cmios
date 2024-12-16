@@ -3,6 +3,12 @@
 #include "console.h"
 #include "sha1.h"
 
+#define INJECT	// inject swiss.dol binary (placed in data folder) into cmios
+
+#ifdef INJECT
+#include "swiss_dol.h"
+#endif
+
 CMIOSTag* tag;
 char* legacyMagic;
 
@@ -51,7 +57,25 @@ int main(int argc, char **argv) {
 	tag = (CMIOSTag*)0x80001800;
 	legacyMagic = (char*)0x807fffe0;
 
-	// new cmios behaviour
+#ifdef INJECT
+	// new cmios load from injected
+	if (tag->magic == 0x50155d01) {
+		// clear magic value so GC disc will work after reset
+		tag->magic = 0;
+		DCFlushRange(tag, sizeof(CMIOSTag));
+		ICInvalidateRange(tag, sizeof(CMIOSTag));
+		// text
+		consoleInit();
+		printf("== cMIOS (inject) ==\n\npayload location: %p\n", swiss_dol);
+		sleep(1);
+		// branch to payload
+		resetDI();
+		execFromMem((u8*)swiss_dol);
+		sleep(3);
+	} else
+#endif
+
+	// new cmios load from file
 	if ((tag->magic & 0x0fffffff) == 0xd0110ad) {
 		bool ecc = tag->magic >> 28 == 1; // first character
 		// clear magic value so GC disc will work after reset
@@ -60,7 +84,7 @@ int main(int argc, char **argv) {
 		ICInvalidateRange(tag, sizeof(CMIOSTag));
 		// text
 		consoleInit();
-		printf("== cMIOS %s==\n", ecc ? "(ecc) " : "");
+		printf("== cMIOS %s==\n", ecc ? "(file ecc) " : "(file)");
 		sleep(1);
 		// branch to payload if verified
 		if (ecc) { correctErrors(); }
@@ -73,10 +97,10 @@ int main(int argc, char **argv) {
 			printf(CON_RED("\nFAIL\n"));
 		}
 		sleep(3);
-	}
+	} else
 
 	// old cmios behaviour
-	else if (strncmp(legacyMagic, "gchomebrew dol", 32) == 0) {
+	if (strncmp(legacyMagic, "gchomebrew dol", 32) == 0) {
 		// clear magic value so GC disc will work after reset
 		*legacyMagic = 0;
 		DCFlushRange(legacyMagic, 32);
