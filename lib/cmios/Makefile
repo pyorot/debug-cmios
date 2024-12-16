@@ -8,7 +8,7 @@ BUILD		:=	_
 CACHE		:=	_/cache
 
 # --- sources ---
-SRCS		 =	src
+SRCS		 =	src ../monke/sha1 ../monke/console
 SRCEXTS		 =	.c
 BINS		 =	
 BINEXTS		 =	
