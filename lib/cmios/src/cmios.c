@@ -57,18 +57,19 @@ bool verify() {
 int main(int argc, char **argv) {
 	tag = (CMIOSTag*)0x80001800;
 	legacyMagic = (char*)0x807fffe0;
+	consoleInit();
+	printf("== cMIOS "); 
+	padScanOnNextFrame();
 
 #ifdef INJECT
 	// new cmios load from injected
-	if (tag->magic == 0x50155d01) {
+	if (tag->magic == 0x50155d01 || (PAD_ButtonsHeld(0) & PAD_BUTTON_A)) {
 		// clear magic value so GC disc will work after reset
 		tag->magic = 0;
 		DCFlushRange(tag, sizeof(CMIOSTag));
 		ICInvalidateRange(tag, sizeof(CMIOSTag));
 		// text
-		consoleInit();
-		printf("== cMIOS (inject) ==\n\npayload location: %p\n", swiss_dol);
-		sleep(1);
+		printf("(inject) ==\n\npayload at: %p\n", swiss_dol); sleep(1);
 		// branch to payload
 		resetDI();
 		execFromMem((u8*)swiss_dol);
@@ -84,14 +85,11 @@ int main(int argc, char **argv) {
 		DCFlushRange(tag, sizeof(CMIOSTag));
 		ICInvalidateRange(tag, sizeof(CMIOSTag));
 		// text
-		consoleInit();
-		printf("== cMIOS %s==\n", ecc ? "(file ecc) " : "(file)");
-		sleep(1);
+		printf("(file%s) ==\n", ecc ? " | ecc" : ""); sleep(1);
 		// branch to payload if verified
 		if (ecc) { correctErrors(); }
 		if (verify()) {
-			printf(CON_GREEN("\nOK\n"));
-			sleep(3);
+			printf(CON_GREEN("\nOK\n")); sleep(3);
 			resetDI();
 			execFromMem(tag->payloads[0]);
 		} else {
@@ -107,9 +105,7 @@ int main(int argc, char **argv) {
 		DCFlushRange(legacyMagic, 32);
 		ICInvalidateRange(legacyMagic, 32);
 		// text
-		consoleInit();
-		printf("== cMIOS (legacy) ==\n");
-		VIDEO_WaitVSync();
+		printf("(legacy) ==\n"); VIDEO_WaitVSync();
 		// branch to payload
 		execFromMem((void*)0x80800000);
 		sleep(3);
