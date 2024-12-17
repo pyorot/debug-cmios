@@ -25,7 +25,7 @@ void correctErrors() {
 			corr++; usleep(100000);
 		}
 	}
-    DCFlushRange(p[0], tag->size);
-    ICInvalidateRange(p[0], tag->size);	
+	DCFlushRange(p[0], tag->size);
+	ICInvalidateRange(p[0], tag->size);	
 	printf(">> corrections: %d\n", corr);
 }

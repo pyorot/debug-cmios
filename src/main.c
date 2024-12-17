@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 	printf("\x1b[%u;%um", 37, false);
 	printheadline();
 	
-	IosPatch_RUNTIME(PATCH_WII, PATCH_ISFS_PERMISSIONS | PATCH_ES_IDENTIFY | PATCH_HASH_CHECK | PATCH_NEW_HASH_CHECK, true);
+	IosPatch_RUNTIME(PATCH_WII, PATCH_ISFS_PERMISSIONS | PATCH_HASH_CHECK | PATCH_NEW_HASH_CHECK, true);
 	Install_patched_MIOS(0x101, 10, true, 256);
 	VIDEO_WaitVSync();
 	

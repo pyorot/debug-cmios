@@ -45,12 +45,12 @@ static void resetDI(void) {
 
 bool verify() {
 	static u8 hash[20];
-    printf(">> hashes:");
+	printf(">> hashes:");
 	for (int i=4; i>=0; i--) {
 		SHA1((u8*)tag->payloads[i], tag->size, hash);
 		printf(" %02x%02x", hash[0], hash[1]);
 	}
-    return memcmp(&hash, &tag->hash, 20) == 0;
+	return memcmp(&hash, &tag->hash, 20) == 0;
 }
 
 int main(int argc, char **argv) {
