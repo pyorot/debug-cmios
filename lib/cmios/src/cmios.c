@@ -37,7 +37,8 @@ static void resetDI(void) {
 	volatile unsigned long *ios_sync_base = (unsigned long *) 0x800030E0;
 	volatile unsigned long *phys_ios_di_sync = (unsigned long *) 0xC00030F8;
 
-	*pi_cmd |= 0b1; // trigger GameCube DI reset, MEM reset, SYS reset
+	*pi_cmd |= 0b101; // GameCube hardware registers: not DI reset, MEM reset, SYS reset rsp.
+	// SYS reset avoids crash and not DI reset avoids "detecting devices" double drive spin-up in Swiss
 	*ios_di_sync = 1; // DI reset compatibility bit
 	DCFlushRange((void *) ios_sync_base, 32);
 	while (*phys_ios_di_sync != 0); // wait for Starlet.

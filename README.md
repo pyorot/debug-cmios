@@ -64,7 +64,7 @@ It is a shame that GameCube homebrew must be installed to work reliably on all W
 
 ### Regressions
 
-Currently, the debug cMIOS crashes 5% of the time in file loading mode, soon after LaunchTitle is called in the Booter. I wonder if there's a part of MEM1 that's off-limits? It currently writes the lowest payload to 0x80300000, which may be too low.
+Currently, the debug cMIOS crashes 5% of the time in both file loading and injected mode, soon after LaunchTitle is called in the Booter. There's a missing line from Wii Swiss Booter's DolLoader that sets a clock that might prevent this, or else the [Wii app code](https://github.com/emukidid/swiss-gc/blob/master/wii/booter/source/main.c) from Swiss's own Wii Booter can be implemented here.
 
 Note also that the installer's codebase is a mess (I only cleaned up the cMIOS itself). I've patched it to auto-install the cMIOS using an `RVL-MIOS-v10.wad` in the root of an inserted USB drive, but turning it into a full release would require fixing up some very, very concerning compiler warnings.
 
