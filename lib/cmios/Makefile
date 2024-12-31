@@ -8,14 +8,15 @@ BUILD		:=	_
 CACHE		:=	_/cache
 
 # --- sources ---
-SRCS		 =	src
+SRCS		 =	src ../monke/console
 SRCEXTS		 =	.c
-BINS		 =	
-BINEXTS		 =	
+BINS		 =	data
+BINEXTS		 =	.dol
 LIBS		 =	-logc
 LIBDIRSBNDLE =	
 LIBDIRSLOOSE =	
 INCLUDES	 =	
+LIBOGC		 =	$(DEVKITPRO)/libogc2
 
 # --- flags ---
 CFLAGS		 =	-save-temps -g -Os -Wall -Wno-unused-variable

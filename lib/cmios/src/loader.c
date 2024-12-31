@@ -13,7 +13,7 @@ typedef struct _dolheader {
 
 // loads the data of the dol at *dolstart into current execution
 // this code was contributed by shagkur of the devkitpro team, thx!
-u32 load_dol_image (void *dolstart) {
+static u32 loadFromMem(void *dolstart) {
 	u32 i;
 	dolheader *dolfile;
 
@@ -40,14 +40,10 @@ u32 load_dol_image (void *dolstart) {
 extern void __exception_closeall(void);
 
 // loads dol from memory buffer into execution memory, and executes it
-int load_dol(void) {
-	u8 *data = (u8 *)0x80800000;
-	void (*entry_point)() = (void(*)())load_dol_image(data);
+int execFromMem(void* data) {
+	void (*entry_point)() = (void(*)())loadFromMem(data);
 	unsigned long level = 0;
-
-#if defined(__wii__)
-	__IOS_ShutdownSubsystems();
-#endif
+	
 	_CPU_ISR_Disable(level);
 	__exception_closeall();
 	entry_point();

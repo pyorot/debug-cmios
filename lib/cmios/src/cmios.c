@@ -1,18 +1,17 @@
 #include <string.h>
 #include <unistd.h>
 #include <gccore.h>
+#include "console.h"
 
-extern int load_dol(void);
+extern int execFromMem(void* data);
 
-void call_mios(void) {
-	unsigned long *entry = (unsigned long *) 0x800037fc;
-
-	/* Restore patched entry point. */
+static void callMIOS(void) {
+	// restore patched entry point
+	u32* entry = (u32*) 0x800037fc;
 	*entry = 0x81300200;
 	DCFlushRange(entry, 32);
 	ICInvalidateRange(entry, 32);
-
-	/* Simulate boot. */
+	// simulate boot
 	__asm__(
 		"bl DCDisable\n"
 		"bl ICDisable\n"
@@ -25,21 +24,21 @@ void call_mios(void) {
 }
 
 int main(int argc, char **argv) {
-	char *magic = (char *) 0x807FFFE0;
+	char* legacyMagic = (char*)0x807fffe0;
+    consoleInit(); // some sort of video init is *required* by hardware for input detection
 
-	if (strncmp(magic, "gchomebrew dol", 32) != 0) {
-		/* No homebrew means normal startup. */
-		call_mios();
+	// old cmios behaviour
+	if (strncmp(legacyMagic, "gchomebrew dol", 32) == 0) {
+		// consume magic value
+		*legacyMagic = 0;
+		DCFlushRange(legacyMagic, 32);
+		ICInvalidateRange(legacyMagic, 32);
+		// branch to payload (in stale memory)
+		execFromMem((void*)0x80800000);
+		sleep(3);
 	}
 
-	/* Overwrite magic value, so GC disc will work after reset. */
-	*magic = 0;
-	DCFlushRange(magic, 32);
-	ICInvalidateRange(magic, 32);
-
-	load_dol();
-
-	sleep(3);
-	call_mios();
+	// normal startup (if no homebrew)
+	callMIOS();
 	return 0;
 }
