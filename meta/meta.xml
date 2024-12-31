@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1.0">
+	<name>Swiss cMIOS Installer</name>
+	<version>r1788</version>
+        <release_date>202412312000</release_date>
+	<coder>shoutplenty</coder>
+	<short_description>Installs cMIOS with Swiss built-in</short_description>
+<long_description>This cMIOS replaces the original MIOS (v10); the installer has the option to reinstall the original MIOS instead.
+	
+All installation is done by patching, so the app gives you the option to download a copy of original MIOS from Nintendo Update Server, or to use a copy named "RVL-mios-v10.wad" on the root of your SD card or USB drive.
+
+To launch the built-in Swiss app, hold Y during any GameCube mode load. For example, hold Y in Wii Swiss Booter v1.1, or on the disc channel/Priiloader with a GameCube game included. When not holding Y, this cMIOS should behave identically to original MIOS and WiiGator cMIOS.</long_description>
+	<ahb_access/>
+</app>

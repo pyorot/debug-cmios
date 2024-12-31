@@ -17,7 +17,9 @@ int main(int argc, char* argv[])
 	WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);					
 
 	printheadline();
-	
+	printf("\nThe Swiss cMIOS has Swiss bundled, but is also compatible with\n");
+	printf("  WiiGator's cMIOS Dol loading and with vanilla GameCube discs.\n");
+
 	s32 ret = IosPatch_RUNTIME(PATCH_WII, PATCH_ISFS_PERMISSIONS | PATCH_HASH_CHECK | PATCH_NEW_HASH_CHECK, false);
 	if (ret >= 0) {
 		printf("\nPress Y/1 to install the cMIOS or X/2 for vanilla MIOS; other to exit.\n");

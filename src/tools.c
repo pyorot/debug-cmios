@@ -137,7 +137,7 @@ void printheadline()
 	int rows, cols;
 	CON_GetMetrics(&cols, &rows);
 
-	printf("Installer for WiiGator's cMIOS");
+	printf("Installer for Swiss (r1788) cMIOS");
 	
 	char buf[64];
 	sprintf(buf, "IOS%u (Rev %u)\n", IOS_GetVersion(), IOS_GetRevision());
@@ -178,4 +178,3 @@ void Con_ClearLine()
 	printf("\r");
 	fflush(stdout);
 }
-
