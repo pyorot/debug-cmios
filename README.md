@@ -1,6 +1,8 @@
 # Debug cMIOS
 
-This cMIOS is an evolution of the WiiGator/WiiPower cMIOS, forked from its repository (backed up with user-downloadable release [here](https://github.com/ForwarderFactory/cmios-wiigator-installer/)). It's an unreleased research project, with a write-up of its current state below.
+This cMIOS is an evolution of the WiiGator/WiiPower cMIOS, forked from its repository (backed up with user-downloadable release [here](https://github.com/ForwarderFactory/cmios-wiigator-installer/)). It's an unreleased research project, with a write-up of its current state below. The direction of the project and unresolved issues are documented at [this issue](https://github.com/pyorot/debug-cmios/issues/1).
+
+The **swiss-cmios** branch is an interim release of the debug cMIOS with [Swiss](https://github.com/emukidid/swiss-gc/) r1788 built into it; check out its readme for more info.
 
 ## The new cMIOS
 
@@ -64,7 +66,7 @@ It is a shame that GameCube homebrew must be installed to work reliably on all W
 
 ### Regressions
 
-Currently, the debug cMIOS crashes 5% of the time in both file loading and injected mode, soon after LaunchTitle is called in the Booter. There's a missing line from Wii Swiss Booter's DolLoader that sets a clock that might prevent this, or else the [Wii app code](https://github.com/emukidid/swiss-gc/blob/master/wii/booter/source/main.c) from Swiss's own Wii Booter can be implemented here.
+This branch crashes 20% of the time at the `VIDEO_Init` call in the cMIOS; the issue is resolved by compiling with [**libogc2**](https://github.com/extremscorner/libogc2) instead of libogc, as is done on the `swiss-cmios` branch, but the change hasn't been made to this branch yet.
 
 Note also that the installer's codebase is a mess (I only cleaned up the cMIOS itself). I've patched it to auto-install the cMIOS using an `RVL-MIOS-v10.wad` in the root of an inserted USB drive, but turning it into a full release would require fixing up some very, very concerning compiler warnings.
 

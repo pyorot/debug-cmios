@@ -3,7 +3,8 @@
 #include "console.h"
 #include "sha1.h"
 
-#define INJECT	// inject swiss.dol binary (placed in data folder) into cmios
+
+#define INJECT	// inject swiss.dol binary (placed in lib/cmios/data folder) into cmios
 
 #ifdef INJECT
 #include "swiss_dol.h"
@@ -58,7 +59,7 @@ int main(int argc, char **argv) {
 	tag = (CMIOSTag*)0x80001800;
 	legacyMagic = (char*)0x807fffe0;
 	consoleInit();
-	printf("== cMIOS "); 
+	printf("== cMIOS ");
 	padScanOnNextFrame();
 
 #ifdef INJECT
