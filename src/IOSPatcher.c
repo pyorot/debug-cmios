@@ -708,9 +708,9 @@ out:
 s32 get_IOS(IOS **ios, u32 iosnr, u32 revision)
 {
 	char buf[64];
-	u32 pressed = 0;
-	u32 pressedGC = PAD_BUTTON_A;
-	int selection = 1;
+	u32 pressed;
+	u32 pressedGC;
+	int selection = 2;
 	int ret;
 	char *optionsstring[4] = { "<Load MIOS from sd card>", "<Load MIOS from usb storage>", "<Download MIOS from NUS>", "<Exit>" };
 	
@@ -722,7 +722,7 @@ s32 get_IOS(IOS **ios, u32 iosnr, u32 revision)
 		printf(optionsstring[selection]);
 		set_highlight(false);
 		
-		//waitforbuttonpress(&pressed, &pressedGC);
+		waitforbuttonpress(&pressed, &pressedGC);
 		
 		if (pressed == WPAD_BUTTON_LEFT || pressedGC == PAD_BUTTON_LEFT)
 		{
@@ -814,7 +814,7 @@ s32 install_unpatched_MIOS(u32 iosversion, u32 revision)
 	int ret;
 	IOS *ios;
 	
-	printf("Getting MIOS%u revision %u...\n", iosversion, revision);
+	printf("Getting MIOSv%u...\n", revision);
 	ret = get_IOS(&ios, iosversion, revision);
 	if (ret < 0)
 	{
@@ -823,24 +823,16 @@ s32 install_unpatched_MIOS(u32 iosversion, u32 revision)
 	}
 	
 	printf("\n");
-	printf("Press A to start installation...\n");
-
-	u32 pressed;
-	u32 pressedGC;	
-	waitforbuttonpress(&pressed, &pressedGC);
-	if (pressed != WPAD_BUTTON_A && pressedGC != PAD_BUTTON_A)
-	{
-		printf("Other button pressed\n");
-		free_IOS(&ios);
-		return -1;
-	}
-	
 	printf("Installing MIOSv%u...\n", revision);
 	ret = install_IOS(ios, false);
 	if (ret < 0)
 	{
-		printf("Error: Could not install MIOS%u Rev %u\n", iosversion, revision);
 		free_IOS(&ios);
+		if (ret == -1017 || ret == -2011) {
+			printf("You need to use an IOS with trucha bug or patch it into the running IOS.\n");
+		} else if (ret == -1035) {
+			printf("'Downgrade' failed; uninstall the existing MIOS with a WAD manager, then try again.\n");
+		}
 		return ret;
 	}
 	printf("done\n");
@@ -985,39 +977,21 @@ s32 Install_patched_MIOS(u32 iosnr, u32 iosrevision, bool patchhomebrew, u32 new
 	encrypt_IOS(ios);
 	
 	printf("Preparations complete\n\n");
-	printf("Press A to start the install...\n");
-
-	u32 pressed = 0;
-	u32 pressedGC = PAD_BUTTON_A;	
-	//waitforbuttonpress(&pressed, &pressedGC);
-	if (pressed != WPAD_BUTTON_A && pressedGC != PAD_BUTTON_A)
-	{
-		printf("Other button pressed\n");
-		free_IOS(&ios);
-		return -1;
-	}
 
 	printf("Installing...\n");
 	ret = install_IOS(ios, false);
 	if (ret < 0)
 	{
 		free_IOS(&ios);
-		if (ret == -1017 || ret == -2011)
-		{
-			printf("You need to use an IOS with trucha bug.\n");
-			printf("Up to system menu 4.2, you can get one with Trucha Bug Restorer.\n");
-		} else
-		if (ret == -1035)
-		{
-			printf("'Downgrade' failed, use an IOS that ignores the version of titles.\n");
-			printf("Up to system menu 4.2, you can get one with Trucha Bug Restorer 1.12.\n");
+		if (ret == -1017 || ret == -2011) {
+			printf("You need to use an IOS with trucha bug or patch it into the running IOS.\n");
+		} else if (ret == -1035) {
+			printf("'Downgrade' failed; uninstall the existing MIOS with a WAD manager, then try again.\n");
 		}
-		
-		return -1;
+		return ret;
 	}
 	printf("done\n");
 	
 	free_IOS(&ios);
 	return 0;
 }
-
